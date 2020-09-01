@@ -67,6 +67,9 @@ int WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int n
 		680, 400, 0, 0, hInstance, 0);
 	HDC hdc = GetDC(window);
 
+
+	int level = 1;
+
 	while (gameActive) 
 	{
 		//INPUT
@@ -77,8 +80,13 @@ int WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int n
 			DispatchMessage(&message);
 		}
 		//SIMULATE
-		render_graphics(0X005500);
-		draw_rect(0, 0, 400, 400, 0X334422);
+		render_graphics(0XEEEEEE);
+		//draw_rect(70, 0, 70, 300, 0X000000);
+		//draw_rect(80, 0, 80, 40, 0X334422);
+		draw_rect(40, 10, 340, 350, 0X660000);
+		
+		
+		
 
 		//RENDER
 		StretchDIBits(hdc, 0, 0, render_state.width, 
