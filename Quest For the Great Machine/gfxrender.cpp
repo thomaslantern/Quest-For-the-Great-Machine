@@ -61,31 +61,35 @@ void draw_map(int x, int y)
 			//draw_rect(startx, starty, startx + 50, starty + 50, tile_color); //starting: 40, 100, 90, 150
 			draw_rect(startx, starty, startx + 49, starty + 49, tile_color); //starting: 40, 100, 90, 150
 
-			// tiles are 49X49 (pretend 50X50??)
-			// occupy middle of tile, half size of tile
+			
 
-			//main head
-			// first tile is x: 40 to 90; y: 30 to 80
-			int constx = (x * 50) - 50;
-			int consty = (y * 50) - 50;
-
-			draw_rect(57 + constx, 70 + consty, 62 + constx, 75 + consty, 0XAAAAAA);
-			draw_rect(67 + constx, 70 + consty, 72 + constx, 75 + consty, 0XAAAAAA);
-			draw_rect(52 + constx, 55 + consty, 77 + constx, 70 + consty, 0XAAAAAA);
-			draw_rect(57 + constx, 60 + consty, 62 + constx, 65 + consty, 0X00BBAA);
-			draw_rect(67 + constx, 60 + consty, 72 + constx, 65 + consty, 0X009988);
-			draw_rect(57 + constx, 40 + consty, 72 + constx, 55 + consty, 0XAAAAAA);
-			draw_rect(52 + constx, 45 + consty, 57 + constx, 55 + consty, 0X777777);
-			draw_rect(72 + constx, 45 + consty, 77 + constx, 55 + consty, 0X777777);
-			draw_rect(52 + constx, 40 + consty, 57 + constx, 45 + consty, 0X555555);
-			draw_rect(72 + constx, 40 + consty, 77 + constx, 45 + consty, 0X555555);
-			draw_rect(52 + constx, 30 + consty, 57 + constx, 35 + consty, 0X555555);
-			draw_rect(72 + constx, 30 + consty, 77 + constx, 35 + consty, 0X555555);
-			draw_rect(57 + constx, 30 + consty, 62 + constx, 40 + consty, 0X777777);
-			draw_rect(67 + constx, 30 + consty, 72 + constx, 40 + consty, 0X777777);
-			draw_rect(62 + constx, 45 + consty, 67 + constx, 50 + consty, 0X660066);
+			
 
 		}
 
 	}
+
+	// tiles are 49X49 (pretend 50X50??)
+			// occupy middle of tile, half size of tile
+
+			//main head
+			// first tile is x: 40 to 90; y: 30 to 80
+	int constx = (x * 50) - 50;
+	int consty = (y * 50) - 50;
+
+	draw_rect(57 + constx, 70 + consty, 62 + constx, 75 + consty, 0XAAAAAA);
+	draw_rect(67 + constx, 70 + consty, 72 + constx, 75 + consty, 0XAAAAAA);
+	draw_rect(52 + constx, 55 + consty, 77 + constx, 70 + consty, 0XAAAAAA);
+	draw_rect(57 + constx, 60 + consty, 62 + constx, 65 + consty, 0X00BBAA);
+	draw_rect(67 + constx, 60 + consty, 72 + constx, 65 + consty, 0X009988);
+	draw_rect(57 + constx, 40 + consty, 72 + constx, 55 + consty, 0XAAAAAA);
+	draw_rect(52 + constx, 45 + consty, 57 + constx, 55 + consty, 0X777777);
+	draw_rect(72 + constx, 45 + consty, 77 + constx, 55 + consty, 0X777777);
+	draw_rect(52 + constx, 40 + consty, 57 + constx, 45 + consty, 0X555555);
+	draw_rect(72 + constx, 40 + consty, 77 + constx, 45 + consty, 0X555555);
+	draw_rect(52 + constx, 30 + consty, 57 + constx, 35 + consty, 0X555555);
+	draw_rect(72 + constx, 30 + consty, 77 + constx, 35 + consty, 0X555555);
+	draw_rect(57 + constx, 30 + consty, 62 + constx, 40 + consty, 0X777777);
+	draw_rect(67 + constx, 30 + consty, 72 + constx, 40 + consty, 0X777777);
+	draw_rect(62 + constx, 45 + consty, 67 + constx, 50 + consty, 0X660066);
 }

@@ -1,4 +1,5 @@
 #include <windows.h>
+#include <iostream>
 
 bool gameActive = true;
 
@@ -14,10 +15,23 @@ struct Player {
 
 };
 
+struct Map {
+	int row_one[6], row_two[6], row_three[6];
+	int row_four[6], row_five[6], row_six[6];
+	void move_map_object();
+};
+
 Render_State render_state;
+
+void move_map_object(Map map, Player player)
+{
+	int batman; // delete this nonsense immediately!!!!!!!!!!
+}
 
 #include "platform_inputs.cpp"
 #include "gfxrender.cpp"
+
+
 
 LRESULT CALLBACK window_callback(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {	
@@ -80,15 +94,15 @@ int WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int n
 	player.posx = 1;
 	player.posy = 1;
 
-	while (gameActive) 
+	while (gameActive)
 	{
-		
 
-		for (int i = 0; i < BUTTON_COUNT; i++) 
+
+		for (int i = 0; i < BUTTON_COUNT; i++)
 		{
 			input.buttons[i].changed = false;
 		}
-		
+
 		//INPUT
 		MSG message;
 		while (PeekMessage(&message, window, 0, 0, PM_REMOVE))
@@ -108,25 +122,25 @@ int WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int n
 				{
 					input.buttons[BUTTON_UP].is_down = is_down;
 					input.buttons[BUTTON_UP].changed = true;
-					
+
 				} break;
 				case VK_DOWN:
 				{
 					input.buttons[BUTTON_DOWN].is_down = is_down;
 					input.buttons[BUTTON_DOWN].changed = true;
-					if (player.posy > 1) player.posy -= 1;
+
 				} break;
 				case VK_LEFT:
 				{
 					input.buttons[BUTTON_LEFT].is_down = is_down;
 					input.buttons[BUTTON_LEFT].changed = true;
-					if (player.posx > 1) player.posx -= 1;
+					
 				} break;
 				case VK_RIGHT:
 				{
 					input.buttons[BUTTON_RIGHT].is_down = is_down;
 					input.buttons[BUTTON_RIGHT].changed = true;
-					if (player.posx < 6) player.posx += 1;
+				
 				} break;
 				}
 			} break;
@@ -141,13 +155,15 @@ int WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int n
 		//draw_rect(70, 0, 70, 300, 0X000000);
 		if ((input.buttons[BUTTON_UP].is_down) && (input.buttons[BUTTON_UP].changed) && (player.posy < 6))
 			player.posy += 1;
-		/*
-		else if (input.buttons[BUTTON_DOWN].is_down)
-			draw_rect(180, 0, 280, 140, 0X552233);
-		else if (input.buttons[BUTTON_LEFT].is_down)
-			draw_rect(280, 0, 380, 100, 0x6633AA);
-		else if (input.buttons[BUTTON_RIGHT].is_down)
-			draw_rect(380, 0, 480, 100, 0x00FF00);*/
+
+		else if ((input.buttons[BUTTON_DOWN].is_down) && (input.buttons[BUTTON_DOWN].changed) && (player.posy > 1))
+			player.posy -= 1;
+
+		else if ((input.buttons[BUTTON_LEFT].is_down) && (input.buttons[BUTTON_LEFT].changed) && (player.posx > 1))
+			player.posx -= 1;
+			
+		else if ((input.buttons[BUTTON_RIGHT].is_down) && (input.buttons[BUTTON_RIGHT].changed) && (player.posx < 6))
+			player.posx += 1;
 
 		
 		draw_map(player.posx, player.posy);
