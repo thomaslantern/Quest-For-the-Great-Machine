@@ -9,6 +9,11 @@ struct Render_State {
 	BITMAPINFO bitmap_info;
 };
 
+struct Player {
+	int posx, posy;
+
+};
+
 Render_State render_state;
 
 #include "platform_inputs.cpp"
@@ -71,6 +76,9 @@ int WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int n
 	Input input = {};
 
 	int level = 1;
+	Player player;
+	player.posx = 1;
+	player.posy = 1;
 
 	while (gameActive) 
 	{
@@ -100,21 +108,25 @@ int WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int n
 				{
 					input.buttons[BUTTON_UP].is_down = is_down;
 					input.buttons[BUTTON_UP].changed = true;
+					
 				} break;
 				case VK_DOWN:
 				{
 					input.buttons[BUTTON_DOWN].is_down = is_down;
 					input.buttons[BUTTON_DOWN].changed = true;
+					if (player.posy > 1) player.posy -= 1;
 				} break;
 				case VK_LEFT:
 				{
 					input.buttons[BUTTON_LEFT].is_down = is_down;
 					input.buttons[BUTTON_LEFT].changed = true;
+					if (player.posx > 1) player.posx -= 1;
 				} break;
 				case VK_RIGHT:
 				{
 					input.buttons[BUTTON_RIGHT].is_down = is_down;
 					input.buttons[BUTTON_RIGHT].changed = true;
+					if (player.posx < 6) player.posx += 1;
 				} break;
 				}
 			} break;
@@ -127,56 +139,18 @@ int WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int n
 		//SIMULATE
 		render_graphics(0XEEEEEE);
 		//draw_rect(70, 0, 70, 300, 0X000000);
-		if (input.buttons[BUTTON_UP].is_down)
-			draw_rect(80, 0, 180, 140, 0X334422);
+		if ((input.buttons[BUTTON_UP].is_down) && (input.buttons[BUTTON_UP].changed) && (player.posy < 6))
+			player.posy += 1;
+		/*
 		else if (input.buttons[BUTTON_DOWN].is_down)
 			draw_rect(180, 0, 280, 140, 0X552233);
 		else if (input.buttons[BUTTON_LEFT].is_down)
 			draw_rect(280, 0, 380, 100, 0x6633AA);
 		else if (input.buttons[BUTTON_RIGHT].is_down)
-			draw_rect(380, 0, 480, 100, 0x00FF00);
+			draw_rect(380, 0, 480, 100, 0x00FF00);*/
 
-		draw_rect(39, 99, 341, 301, 0X000000);
-		draw_rect(40, 100, 340, 300, 0X660000);
-		draw_rect(40, 100, 90, 150, 0XDDDDDD);
-		draw_rect(90, 100, 140, 150, 0XBBBBBB);
-		draw_rect(140, 100, 190, 150, 0XDDDDDD);
-		draw_rect(190, 100, 240, 150, 0XBBBBBB);
-
-
-		for (int row = 1; row < 7; row++) {
-			
-			for (int col = 1; col < 7; col++) {
-				unsigned int tile_color;
-				int startx = 40 + ((col - 1) * 50);
-				int starty = 100 + ((row - 1) * 50);
-				switch (row) {
-
-
-				case 1:
-				{tile_color = 0XFFFFFF; }
-				break;
-				case 2:
-				{tile_color = 0X000000; }
-				break;
-				case 3:
-				{tile_color = 0X00FF00; }
-				break;
-				case 4:
-				{tile_color = 0X0000FF; }
-				break;
-				case 5:
-				{tile_color = 0XDDDDDD; }
-				break;
-				case 6:
-				{tile_color = 0XBBBBBB; }
-				break;
-				}
-				//draw_rect(startx, starty, startx + 50, starty + 50, tile_color); //starting: 40, 100, 90, 150
-				draw_rect(startx, starty, 50, 150, tile_color); //starting: 40, 100, 90, 150
-			}
-		}
-
+		
+		draw_map(player.posx, player.posy);
 
 		
 		
