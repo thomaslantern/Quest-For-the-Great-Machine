@@ -145,9 +145,35 @@ int WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int n
 
 
 		for (int row = 1; row < 7; row++) {
-			unsigned int* pixel = (unsigned int*)render_state.memory + x0 + row * render_state.width;
+			
 			for (int col = 1; col < 7; col++) {
-				draw_rect()
+				unsigned int tile_color;
+				int startx = 40 + ((col - 1) * 50);
+				int starty = 100 + ((row - 1) * 50);
+				switch (row) {
+
+
+				case 1:
+				{tile_color = 0XFFFFFF; }
+				break;
+				case 2:
+				{tile_color = 0X000000; }
+				break;
+				case 3:
+				{tile_color = 0X00FF00; }
+				break;
+				case 4:
+				{tile_color = 0X0000FF; }
+				break;
+				case 5:
+				{tile_color = 0XDDDDDD; }
+				break;
+				case 6:
+				{tile_color = 0XBBBBBB; }
+				break;
+				}
+				//draw_rect(startx, starty, startx + 50, starty + 50, tile_color); //starting: 40, 100, 90, 150
+				draw_rect(startx, starty, 50, 150, tile_color); //starting: 40, 100, 90, 150
 			}
 		}
 
