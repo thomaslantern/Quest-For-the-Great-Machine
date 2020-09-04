@@ -16,17 +16,58 @@ struct Player {
 };
 
 struct Map {
-	int row_one[6], row_two[6], row_three[6];
-	int row_four[6], row_five[6], row_six[6];
-	void move_map_object();
+	int rows_cols[6][6];
+	
 };
+
+Player player;
 
 Render_State render_state;
 
-void move_map_object(Map map, Player player)
+Map levelmap = {
+		0, 2, 1, 0, 0, 0,
+		0, 2, 0, 0, 0, 0,
+		0, 0, 0, 0, 0, 0,
+		0, 0, 0, 0, 0, 0,
+		0, 0, 0, 0, 0, 0,
+		0, 0, 0, 0, 0, 3 };
+
+bool move_map_object(Map map, int desired_x, int desired_y, char direction)
 {
-	int batman; // delete this nonsense immediately!!!!!!!!!!
+	if (map.rows_cols[desired_x - 1][desired_y - 1] == 0) return true;
+	else if (map.rows_cols[desired_x - 1][desired_y - 1] == 1) return false;
+	else if (map.rows_cols[desired_x - 1][desired_y - 1] == 2)
+	{
+		switch (direction)
+		{
+		case 'N':
+		{
+			if (((desired_y + 1) <= 6) && (move_map_object(map, desired_x, (desired_y + 1), 'D')))
+			{
+				levelmap.rows_cols[desired_x][desired_y + 1] = 2;
+				levelmap.rows_cols[desired_x][desired_y] = 0;
+				return true;
+			}
+			else return false;
+		} break;
+		case 'S':
+		{
+			if (move_map_object(map, desired_x, (desired_y - 1), 'D')) return true; 
+			else return false;
+		} break;
+		}
+	}
+	else if (map.rows_cols[desired_x - 1][desired_y - 1] == 3)
+	{
+		player.posx = 1;
+		player.posy = 1;
+		return false;
+	}
+	
+	
 }
+	
+
 
 #include "platform_inputs.cpp"
 #include "gfxrender.cpp"
@@ -68,8 +109,11 @@ LRESULT CALLBACK window_callback(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 	return result;
 }
 
+
+
 int WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nShowCmd) 
 {
+	
 	
 	
 	// Create Window Class
@@ -89,10 +133,16 @@ int WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int n
 
 	Input input = {};
 
+	
+
 	int level = 1;
-	Player player;
+	
+
+	
+	
 	player.posx = 1;
 	player.posy = 1;
+
 
 	while (gameActive)
 	{
@@ -152,18 +202,26 @@ int WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int n
 		}
 		//SIMULATE
 		render_graphics(0XEEEEEE);
-		//draw_rect(70, 0, 70, 300, 0X000000);
+		
 		if ((input.buttons[BUTTON_UP].is_down) && (input.buttons[BUTTON_UP].changed) && (player.posy < 6))
-			player.posy += 1;
+		{
+			if (move_map_object(levelmap, player.posx, (player.posy + 1), 'N')) player.posy += 1;
+			
+		}
+			
 
 		else if ((input.buttons[BUTTON_DOWN].is_down) && (input.buttons[BUTTON_DOWN].changed) && (player.posy > 1))
-			player.posy -= 1;
-
+		{
+			if (move_map_object(levelmap, player.posx, (player.posy - 1), 'S')) player.posy -= 1;
+		}
 		else if ((input.buttons[BUTTON_LEFT].is_down) && (input.buttons[BUTTON_LEFT].changed) && (player.posx > 1))
-			player.posx -= 1;
-			
+		{
+			if (move_map_object(levelmap, (player.posx - 1), player.posy, 'W')) player.posx -= 1;
+		}
 		else if ((input.buttons[BUTTON_RIGHT].is_down) && (input.buttons[BUTTON_RIGHT].changed) && (player.posx < 6))
-			player.posx += 1;
+		{
+			if (move_map_object(levelmap, (player.posx + 1), player.posy, 'E')) player.posx += 1;
+		}
 
 		
 		draw_map(player.posx, player.posy);
