@@ -20,7 +20,7 @@ void draw_rect(int x0, int y0, int x1, int y1, unsigned int color)
 
 }
 
-void draw_map(int x, int y)
+void draw_map(int x, int y, Map map)
 {
 	draw_rect(39, 29, 340, 330, 0X000000);
 
@@ -62,6 +62,37 @@ void draw_map(int x, int y)
 			draw_rect(startx, starty, startx + 49, starty + 49, tile_color); //starting: 40, 100, 90, 150
 
 			
+				
+			switch (map.rows_cols[col - 1][row - 1])
+			{
+			case 0:	
+			{
+			}break;
+			case 1:
+			{
+				draw_rect(startx, starty, startx + 49, starty + 49, 0X000000);
+			}break;
+			case 2:
+			{
+				draw_rect(startx, starty, startx + 49, starty + 49, 0XFF0000);
+			}break;
+			case 3:
+			{
+				draw_rect(startx, starty, startx + 49, starty + 49, 0X008899);
+			}break;
+			}
+
+		/*	Map levelmap = {
+		0, 0, 0, 0, 0, 1,
+		0, 2, 1, 0, 0, 1,
+		0, 0, 0, 0, 0, 1,
+		0, 0, 0, 0, 0, 0,
+		0, 0, 0, 0, 0, 0,
+		0, 0, 0, 0, 0, 3 };
+		
+		[0][0]. [1][0], [2][0], etc
+		*/
+
 
 			
 

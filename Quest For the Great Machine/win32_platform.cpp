@@ -25,12 +25,12 @@ Player player;
 Render_State render_state;
 
 Map levelmap = {
-		0, 2, 1, 0, 0, 0,
-		0, 2, 0, 0, 0, 0,
-		0, 0, 0, 0, 0, 0,
-		0, 0, 0, 0, 0, 0,
-		0, 0, 0, 0, 0, 0,
-		0, 0, 0, 0, 0, 3 };
+		0, 0, 1, 0, 0, 0,
+		0, 1, 0, 0, 1, 0,
+		2, 2, 0, 0, 1, 2,
+		0, 1, 0, 2, 0, 0,
+		1, 0, 2, 2, 2, 0,
+		1, 0, 0, 0, 0, 3 };
 
 bool move_map_object(Map map, int desired_x, int desired_y, char direction)
 {
@@ -44,24 +44,57 @@ bool move_map_object(Map map, int desired_x, int desired_y, char direction)
 		{
 			if (((desired_y + 1) <= 6) && (move_map_object(map, desired_x, (desired_y + 1), 'D')))
 			{
-				levelmap.rows_cols[desired_x][desired_y + 1] = 2;
-				levelmap.rows_cols[desired_x][desired_y] = 0;
+				levelmap.rows_cols[desired_x - 1][desired_y] = 2;
+				levelmap.rows_cols[desired_x - 1][desired_y - 1] = 0;
 				return true;
 			}
 			else return false;
 		} break;
 		case 'S':
 		{
-			if (move_map_object(map, desired_x, (desired_y - 1), 'D')) return true; 
+			if (((desired_y - 1) >= 1) && (move_map_object(map, desired_x, (desired_y - 1), 'D')))
+			{
+				levelmap.rows_cols[desired_x - 1][desired_y - 2] = 2;
+				levelmap.rows_cols[desired_x - 1][desired_y - 1] = 0;
+				return true;
+			}
 			else return false;
 		} break;
+		case 'E':
+		{
+			if (((desired_x + 1) <= 6) && (move_map_object(map, (desired_x + 1), desired_y, 'D')))
+			{
+				levelmap.rows_cols[desired_x][desired_y - 1] = 2;
+				levelmap.rows_cols[desired_x - 1][desired_y - 1] = 0;
+				return true;
+			}
+			else return false;
+		} break;
+		case 'W':
+		{
+			if (((desired_x - 1) >= 1) && (move_map_object(map, (desired_x - 1), desired_y, 'D')))
+			{
+				levelmap.rows_cols[desired_x - 2][desired_y - 1] = 2;
+				levelmap.rows_cols[desired_x - 1][desired_y - 1] = 0;
+				return true;
+			}
+			else return false;
+		} break;
+		case 'D':
+		{
+			return false;
+		}
+		default: return false;
 		}
 	}
 	else if (map.rows_cols[desired_x - 1][desired_y - 1] == 3)
 	{
-		player.posx = 1;
-		player.posy = 1;
-		return false;
+		if (direction != 'D')
+		{
+			player.posx = 1;
+			player.posy = 1;
+			return false;
+		}
 	}
 	
 	
@@ -224,7 +257,7 @@ int WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int n
 		}
 
 		
-		draw_map(player.posx, player.posy);
+		draw_map(player.posx, player.posy, levelmap);
 
 		
 		
