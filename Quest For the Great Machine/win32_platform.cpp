@@ -24,7 +24,7 @@ Player player;
 
 Render_State render_state;
 
-Map levelmap = {
+Map map_one = {
 		0, 0, 1, 0, 0, 0,
 		0, 1, 0, 0, 1, 0,
 		2, 2, 0, 0, 1, 2,
@@ -32,6 +32,20 @@ Map levelmap = {
 		1, 0, 2, 2, 2, 0,
 		1, 0, 0, 0, 0, 3 };
 
+Map map_two = {
+		0, 1, 0, 0, 2, 0,
+		2, 2, 0, 0, 2, 0,
+		0, 0, 1, 0, 0, 0,
+		0, 0, 1, 0, 2, 1,
+		0, 0, 2, 1, 0, 0,
+		0, 2, 0, 0, 0, 3 };
+
+
+
+Map map_list[3] = { map_one, map_two, map_one };
+
+Map current_level = map_list[0];
+int level = 1;
 bool move_map_object(Map map, int desired_x, int desired_y, char direction)
 {
 	if (map.rows_cols[desired_x - 1][desired_y - 1] == 0) return true;
@@ -44,8 +58,8 @@ bool move_map_object(Map map, int desired_x, int desired_y, char direction)
 		{
 			if (((desired_y + 1) <= 6) && (move_map_object(map, desired_x, (desired_y + 1), 'D')))
 			{
-				levelmap.rows_cols[desired_x - 1][desired_y] = 2;
-				levelmap.rows_cols[desired_x - 1][desired_y - 1] = 0;
+				current_level.rows_cols[desired_x - 1][desired_y] = 2;
+				current_level.rows_cols[desired_x - 1][desired_y - 1] = 0;
 				return true;
 			}
 			else return false;
@@ -54,8 +68,8 @@ bool move_map_object(Map map, int desired_x, int desired_y, char direction)
 		{
 			if (((desired_y - 1) >= 1) && (move_map_object(map, desired_x, (desired_y - 1), 'D')))
 			{
-				levelmap.rows_cols[desired_x - 1][desired_y - 2] = 2;
-				levelmap.rows_cols[desired_x - 1][desired_y - 1] = 0;
+				current_level.rows_cols[desired_x - 1][desired_y - 2] = 2;
+				current_level.rows_cols[desired_x - 1][desired_y - 1] = 0;
 				return true;
 			}
 			else return false;
@@ -64,8 +78,8 @@ bool move_map_object(Map map, int desired_x, int desired_y, char direction)
 		{
 			if (((desired_x + 1) <= 6) && (move_map_object(map, (desired_x + 1), desired_y, 'D')))
 			{
-				levelmap.rows_cols[desired_x][desired_y - 1] = 2;
-				levelmap.rows_cols[desired_x - 1][desired_y - 1] = 0;
+				current_level.rows_cols[desired_x][desired_y - 1] = 2;
+				current_level.rows_cols[desired_x - 1][desired_y - 1] = 0;
 				return true;
 			}
 			else return false;
@@ -74,8 +88,8 @@ bool move_map_object(Map map, int desired_x, int desired_y, char direction)
 		{
 			if (((desired_x - 1) >= 1) && (move_map_object(map, (desired_x - 1), desired_y, 'D')))
 			{
-				levelmap.rows_cols[desired_x - 2][desired_y - 1] = 2;
-				levelmap.rows_cols[desired_x - 1][desired_y - 1] = 0;
+				current_level.rows_cols[desired_x - 2][desired_y - 1] = 2;
+				current_level.rows_cols[desired_x - 1][desired_y - 1] = 0;
 				return true;
 			}
 			else return false;
@@ -93,9 +107,12 @@ bool move_map_object(Map map, int desired_x, int desired_y, char direction)
 		{
 			player.posx = 1;
 			player.posy = 1;
-			return false;
+			level += 1;
+			current_level = map_list[level - 1];
 		}
+		return false;
 	}
+	
 	
 	
 }
@@ -168,7 +185,7 @@ int WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int n
 
 	
 
-	int level = 1;
+	
 	
 
 	
@@ -225,6 +242,13 @@ int WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int n
 					input.buttons[BUTTON_RIGHT].changed = true;
 				
 				} break;
+				case 0X51:
+				{
+					player.posx = 1;
+					player.posy = 1;
+					level = 1;
+					current_level = map_list[0];
+				}break;
 				}
 			} break;
 
@@ -238,26 +262,26 @@ int WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int n
 		
 		if ((input.buttons[BUTTON_UP].is_down) && (input.buttons[BUTTON_UP].changed) && (player.posy < 6))
 		{
-			if (move_map_object(levelmap, player.posx, (player.posy + 1), 'N')) player.posy += 1;
+			if (move_map_object(current_level, player.posx, (player.posy + 1), 'N')) player.posy += 1;
 			
 		}
 			
 
 		else if ((input.buttons[BUTTON_DOWN].is_down) && (input.buttons[BUTTON_DOWN].changed) && (player.posy > 1))
 		{
-			if (move_map_object(levelmap, player.posx, (player.posy - 1), 'S')) player.posy -= 1;
+			if (move_map_object(current_level, player.posx, (player.posy - 1), 'S')) player.posy -= 1;
 		}
 		else if ((input.buttons[BUTTON_LEFT].is_down) && (input.buttons[BUTTON_LEFT].changed) && (player.posx > 1))
 		{
-			if (move_map_object(levelmap, (player.posx - 1), player.posy, 'W')) player.posx -= 1;
+			if (move_map_object(current_level, (player.posx - 1), player.posy, 'W')) player.posx -= 1;
 		}
 		else if ((input.buttons[BUTTON_RIGHT].is_down) && (input.buttons[BUTTON_RIGHT].changed) && (player.posx < 6))
 		{
-			if (move_map_object(levelmap, (player.posx + 1), player.posy, 'E')) player.posx += 1;
+			if (move_map_object(current_level, (player.posx + 1), player.posy, 'E')) player.posx += 1;
 		}
 
 		
-		draw_map(player.posx, player.posy, levelmap);
+		draw_map(player.posx, player.posy, current_level);
 
 		
 		
