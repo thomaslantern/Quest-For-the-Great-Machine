@@ -40,9 +40,25 @@ Map map_two = {
 		0, 0, 2, 1, 0, 0,
 		0, 2, 0, 0, 0, 3 };
 
+Map map_three = {
+		0, 0, 0, 0, 0, 1,
+		2, 0, 1, 1, 2, 0,
+		0, 2, 0, 0, 0, 2,
+		0, 1, 0, 0, 1, 0,
+		2, 0, 2, 0, 2, 0,
+		0, 0, 0, 2, 0, 3 };
+
+Map map_four = {
+		0, 2, 0, 2, 0, 2,
+		2, 0, 2, 2, 2, 0,
+		0, 2, 0, 2, 0, 2,
+		2, 0, 2, 0, 2, 0,
+		0, 2, 0, 2, 2, 0,
+		0, 0, 2, 0, 0, 3 };
 
 
-Map map_list[3] = { map_one, map_two, map_one };
+
+Map map_list[4] = { map_one, map_two, map_three, map_four };
 
 Map current_level = map_list[0];
 int level = 1;
