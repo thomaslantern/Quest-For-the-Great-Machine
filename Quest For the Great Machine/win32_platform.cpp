@@ -24,6 +24,18 @@ Player player;
 
 Render_State render_state;
 
+
+// Map states:
+// 0 - blank space or player-occupied space
+// 1 - Obstacle that cannot be moved (Server rack)
+// 2 - Dolly that can be moved if there is nothing in the way
+// 3 - Exit to level
+// 4 - Laser that aims south
+// 5 - Laser that aims north
+// 6 - Laser that aims west
+// 7 - Laser that aims east
+// 8 - Mirror that blocks laser
+
 Map map_one = {
 		0, 0, 1, 0, 0, 0,
 		0, 1, 0, 0, 1, 0,
@@ -56,17 +68,31 @@ Map map_four = {
 		0, 2, 0, 2, 2, 0,
 		0, 0, 2, 0, 0, 3 };
 
+Map map_five = {
+		0, 0, 0, 0, 0, 0,
+		0, 0, 8, 0, 0, 0,
+		0, 0, 0, 1, 8, 0,
+		0, 1, 0, 0, 0, 0,
+		0, 0, 0, 0, 0, 4,
+		0, 0, 6, 0, 0, 3 };
 
 
-Map map_list[4] = { map_one, map_two, map_three, map_four };
+
+
+Map map_list[5] = { map_five, map_two, map_three, map_four, map_five };
 
 Map current_level = map_list[0];
 int level = 1;
 bool move_map_object(Map map, int desired_x, int desired_y, char direction)
 {
 	if (map.rows_cols[desired_x - 1][desired_y - 1] == 0) return true;
-	else if (map.rows_cols[desired_x - 1][desired_y - 1] == 1) return false;
-	else if (map.rows_cols[desired_x - 1][desired_y - 1] == 2)
+	else if (
+		(map.rows_cols[desired_x - 1][desired_y - 1] == 1) || 
+		(map.rows_cols[desired_x - 1][desired_y - 1] == 4) ||
+		(map.rows_cols[desired_x - 1][desired_y - 1] == 5) ||
+		(map.rows_cols[desired_x - 1][desired_y - 1] == 6) ||
+		(map.rows_cols[desired_x - 1][desired_y - 1] == 7)) return false;
+	else if ((map.rows_cols[desired_x - 1][desired_y - 1] == 2) || (map.rows_cols[desired_x - 1][desired_y - 1] == 8))
 	{
 		switch (direction)
 		{
@@ -74,7 +100,7 @@ bool move_map_object(Map map, int desired_x, int desired_y, char direction)
 		{
 			if (((desired_y + 1) <= 6) && (move_map_object(map, desired_x, (desired_y + 1), 'D')))
 			{
-				current_level.rows_cols[desired_x - 1][desired_y] = 2;
+				current_level.rows_cols[desired_x - 1][desired_y] = current_level.rows_cols[desired_x - 1][desired_y - 1];
 				current_level.rows_cols[desired_x - 1][desired_y - 1] = 0;
 				return true;
 			}
@@ -84,7 +110,7 @@ bool move_map_object(Map map, int desired_x, int desired_y, char direction)
 		{
 			if (((desired_y - 1) >= 1) && (move_map_object(map, desired_x, (desired_y - 1), 'D')))
 			{
-				current_level.rows_cols[desired_x - 1][desired_y - 2] = 2;
+				current_level.rows_cols[desired_x - 1][desired_y - 2] = current_level.rows_cols[desired_x - 1][desired_y - 1];
 				current_level.rows_cols[desired_x - 1][desired_y - 1] = 0;
 				return true;
 			}
@@ -94,7 +120,7 @@ bool move_map_object(Map map, int desired_x, int desired_y, char direction)
 		{
 			if (((desired_x + 1) <= 6) && (move_map_object(map, (desired_x + 1), desired_y, 'D')))
 			{
-				current_level.rows_cols[desired_x][desired_y - 1] = 2;
+				current_level.rows_cols[desired_x][desired_y - 1] = current_level.rows_cols[desired_x - 1][desired_y - 1];
 				current_level.rows_cols[desired_x - 1][desired_y - 1] = 0;
 				return true;
 			}
@@ -104,7 +130,7 @@ bool move_map_object(Map map, int desired_x, int desired_y, char direction)
 		{
 			if (((desired_x - 1) >= 1) && (move_map_object(map, (desired_x - 1), desired_y, 'D')))
 			{
-				current_level.rows_cols[desired_x - 2][desired_y - 1] = 2;
+				current_level.rows_cols[desired_x - 2][desired_y - 1] = current_level.rows_cols[desired_x - 1][desired_y - 1];
 				current_level.rows_cols[desired_x - 1][desired_y - 1] = 0;
 				return true;
 			}

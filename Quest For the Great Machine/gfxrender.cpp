@@ -20,6 +20,68 @@ void draw_rect(int x0, int y0, int x1, int y1, unsigned int color)
 
 }
 
+bool kill_check(int row, int column, char direction)
+{
+	// loop check before and after spot in row and column
+	// check if posx = column? or posy = row??
+	switch (direction)
+	{
+	case 'N':
+	// facing up means it is the min number and we're dealing with the column
+	case 'S':
+	// facing down means it is the max number and we're dealing with the column
+	{
+		if (player.posx != column) return false;
+		
+		int min, max;
+		if (player.posy > row)
+		{
+			min = row + 1;
+			max = player.posy;
+		}
+		else
+		{
+			min = player.posy + 1;
+			max = row;
+		}
+
+		for (min; min < max; min++)
+		{
+			if (current_level.rows_cols[column - 1][min - 1] == 8) return false;
+		}
+		return true;
+
+	}break;
+	case 'E':
+	// facing east means it is the min number and we're dealing with the row
+	case 'W':
+	// facing west means it is the max number and we're dealing with the row
+	{
+		if (player.posy != row) return false;
+
+		int min, max;
+		if (player.posx > column)
+		{
+			min = column + 1;
+			max = player.posx;
+		}
+		else
+		{
+			min = player.posx + 1;
+			max = column;
+		}
+
+		for (min; min < max; min++)
+		{
+			if (current_level.rows_cols[min - 1][row - 1] == 8) return false;
+		}
+		return true;
+	}
+	default: return false;
+	}
+	
+}
+
 void draw_map(int x, int y, Map map)
 {
 	draw_rect(39, 29, 340, 330, 0X000000);
@@ -103,18 +165,38 @@ void draw_map(int x, int y, Map map)
 			{
 				draw_rect(startx, starty, startx + 49, starty + 49, 0X008899);
 			}break;
+			case 4:
+			{
+				if (kill_check(row, col, 'S'))
+				{
+					draw_rect(startx, starty, startx + 49, starty + 49, 0XDD0000);
+					player.posx = 1;
+					player.posy = 1;
+				}
+				else draw_rect(startx, starty, startx + 49, starty + 49, 0X00FF00);
+			}break;
+			case 6:
+			{
+				if (kill_check(row, col, 'E'))
+				{
+				
+					player.posx = 1;
+					player.posy = 1;
+				}
+				draw_rect(startx + 30, starty + 35, startx + 40, starty + 40, 0XFF0000);
+				draw_rect(startx + 35, starty + 25, startx + 45, starty + 30, 0X888888);
+				draw_rect(startx + 20, starty + 30, startx + 45, starty + 35, 0X888888);
+				draw_rect(startx + 25, starty + 25, startx + 40, starty + 30, 0X888888);
+				draw_rect(startx + 35, starty + 10, startx + 40, starty + 25, 0X888888);
+				draw_rect(startx + 30, starty + 30, startx + 45, starty + 35, 0X888888);
+				
+			}break;
+			case 8:
+			{
+				
+				draw_rect(startx, starty, startx + 49, starty + 49, 0XEEEE00);
+			}break;
 			}
-
-		/*	Map levelmap = {
-		0, 0, 0, 0, 0, 1,
-		0, 2, 1, 0, 0, 1,
-		0, 0, 0, 0, 0, 1,
-		0, 0, 0, 0, 0, 0,
-		0, 0, 0, 0, 0, 0,
-		0, 0, 0, 0, 0, 3 };
-		
-		[0][0]. [1][0], [2][0], etc
-		*/
 
 
 			
@@ -123,11 +205,6 @@ void draw_map(int x, int y, Map map)
 
 	}
 
-	// tiles are 49X49 (pretend 50X50??)
-			// occupy middle of tile, half size of tile
-
-			//main head
-			// first tile is x: 40 to 90; y: 30 to 80
 	int constx = (x * 50) - 50;
 	int consty = (y * 50) - 50;
 
