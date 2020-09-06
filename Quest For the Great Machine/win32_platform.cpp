@@ -12,7 +12,7 @@ struct Render_State {
 
 struct Player {
 	int posx, posy;
-
+	int lives = 3;
 };
 
 struct Map {
@@ -35,6 +35,7 @@ Render_State render_state;
 // 6 - Laser that aims west
 // 7 - Laser that aims east
 // 8 - Mirror that blocks laser
+// 9 - Dead Robot
 
 Map map_one = {
 		0, 0, 1, 0, 0, 0,
@@ -76,16 +77,28 @@ Map map_five = {
 		0, 0, 0, 0, 0, 4,
 		0, 0, 6, 0, 0, 3 };
 
+Map game_over = {
+		0, 1, 9, 9, 9, 9,
+		1, 9, 9, 9, 9, 9,
+		9, 9, 9, 9, 9, 9,
+		9, 9, 9, 9, 9, 9,
+		9, 9, 9, 9, 9, 9,
+		9, 9, 9, 9, 9, 9 };
 
 
 
-Map map_list[5] = { map_five, map_two, map_three, map_four, map_five };
+Map map_list[5] = { map_one, map_two, map_three, map_four, map_five };
 
 Map current_level = map_list[0];
 int level = 1;
 bool move_map_object(Map map, int desired_x, int desired_y, char direction)
 {
 	if (map.rows_cols[desired_x - 1][desired_y - 1] == 0) return true;
+	else if (map.rows_cols[desired_x - 1][desired_y - 1] == 9)
+	{
+		current_level.rows_cols[desired_x - 1][desired_y - 1] = 0;
+		return true;
+	}
 	else if (
 		(map.rows_cols[desired_x - 1][desired_y - 1] == 1) || 
 		(map.rows_cols[desired_x - 1][desired_y - 1] == 4) ||
@@ -149,8 +162,17 @@ bool move_map_object(Map map, int desired_x, int desired_y, char direction)
 		{
 			player.posx = 1;
 			player.posy = 1;
-			level += 1;
-			current_level = map_list[level - 1];
+			if (level < 5)
+			{
+				level += 1;
+				current_level = map_list[level - 1]; 
+			}
+			else
+			{
+				current_level = game_over;
+			}
+
+
 		}
 		return false;
 	}
@@ -159,6 +181,19 @@ bool move_map_object(Map map, int desired_x, int desired_y, char direction)
 	
 }
 	
+
+void kill_robot(int posx, int posy)
+{
+	Map current_map = map_list[level - 1];
+	if (current_map.rows_cols[posx - 1][posy - 1] == 0)
+	{
+		current_level.rows_cols[posx - 1][posy - 1] = 9;
+	}
+	
+	player.lives -= 1;
+	if (player.lives == 0)
+		current_level = game_over;
+}
 
 
 #include "platform_inputs.cpp"
@@ -218,7 +253,7 @@ int WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int n
 	RegisterClass(&window_class);
 
 	// Create Window
-	HWND window = CreateWindow(window_class.lpszClassName, L"The Quest For The Great Machine",
+	HWND window = CreateWindow(window_class.lpszClassName, L"The Quest For The Great Machine - DEMO",
 		WS_OVERLAPPEDWINDOW | WS_VISIBLE, CW_USEDEFAULT, CW_USEDEFAULT,
 		680, 400, 0, 0, hInstance, 0);
 	HDC hdc = GetDC(window);
@@ -286,10 +321,31 @@ int WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int n
 				} break;
 				case 0X51:
 				{
+					current_level = map_list[0];
 					player.posx = 1;
 					player.posy = 1;
+					player.lives = 3;
 					level = 1;
-					current_level = map_list[0];
+				}break;
+				case 0X52:
+				{
+					
+					
+					int deadrobotx = player.posx;
+					int deadroboty = player.posy;
+
+					if ((player.posx != 1) || (player.posy != 1))
+					{
+						
+						current_level = map_list[level - 1];
+						kill_robot(deadrobotx, deadroboty);
+						
+						player.posx = 1;
+						player.posy = 1;
+					}
+
+
+					
 				}break;
 				}
 			} break;
